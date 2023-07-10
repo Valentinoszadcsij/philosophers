@@ -6,13 +6,12 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/29 16:17:45 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/06/29 18:43:33 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/07/10 15:22:40 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 //#include "philo.h"
-#include <stdio.h>
-#include <sys/time.h>
+#include "philo.h"
 
 long int	time_init(void)
 {
@@ -24,9 +23,21 @@ long int	time_init(void)
 	return (zero);
 }
 
-int main()
+void	sleeping(int s)
 {
-	long int time = time_init();
-	printf("%ld\n", time);
-	return (0);
+	long int	target;
+	long int	start_usec;
+	target = (long)s * 1000;
+	start_usec = (long)time_init() * 1000;
+	while(((long)time_init() * 1000 - start_usec) <= target)
+	{
+		usleep(100);
+	}
 }
+
+// int main()
+// {
+// 	long int time = time_init();
+// 	printf("%ld\n", time);
+// 	return (0);
+// }

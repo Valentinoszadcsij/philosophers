@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:02:03 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/06/26 22:56:54 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/07/10 14:55:41 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ void	params_init(int argc, char *argv[], t_params *params)
 	params->time_sleep = ft_atoi(argv[4]);
 	if (argc == 6)
 		params->must_eat = ft_atoi(argv[5]);
-	if (params->must_eat)
-		printf("Must eat times: %d\n", params->must_eat);
 }
 
 void	parse(int argc, char *argv[], t_params *params)

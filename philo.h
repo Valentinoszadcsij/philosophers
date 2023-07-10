@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 19:00:07 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/06/29 15:51:36 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/07/10 15:05:43 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@
 //states
 # define EAT 0 
 # define THINK 1 
-# define SLEEP 2  
+# define SLEEP 2
+# define DEAD 3
 
 # include <stdio.h>
 # include <unistd.h>
@@ -41,11 +42,25 @@ typedef struct s_philo
 {
 	pthread_t		one_ph;
 	pthread_mutex_t	*fork;
-	t_params		*params;
 	int				num;
 	int				times_eat;
 	int				state;
 }					t_philo;
+
+typedef struct s_main
+{
+	t_params		*params;
+	t_philo			*philo;
+	int				ready;
+	long int		start_time;
+}					t_main;
+
+typedef struct s_thread_data
+{
+	t_main	*main_s;
+	int		index;
+	int		end_threads;
+}			t_thread_dt;
 
 void	parse(int argc, char *argv[], t_params *params);
 void	errors(int errnum);
@@ -53,5 +68,7 @@ int		ft_atoi(const char *str);
 int		ft_isdigit(int a);
 void	thread_init(t_params *params);
 void	*thr_func(void *arg);
+long int	time_init(void);
+void	sleeping(int s);
 
 #endif
