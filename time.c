@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/29 16:17:45 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/07/10 15:22:40 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/07/11 12:34:58 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	sleeping(int s)
 	start_usec = (long)time_init() * 1000;
 	while(((long)time_init() * 1000 - start_usec) <= target)
 	{
-		usleep(100);
+		usleep(1);
 	}
 }
 
