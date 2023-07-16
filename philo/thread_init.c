@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 17:38:58 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/07/10 03:29:50 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/07/16 20:18:25 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,23 +29,38 @@ pthread_mutex_t	*fork_init(int n)
 
 void	philo_init(t_main *main_s)
 {
-	int			i;
+	unsigned long			i;
 	t_thread_dt	*thread_dt;
 
-	thread_dt = malloc(sizeof(thread_dt) * main_s->philo->num);
+	thread_dt = malloc(sizeof(t_thread_dt) * main_s->params->num_philo);
+	pthread_mutex_init(&main_s->end_mutex, NULL);
 	i = 0;
 	while (i < (main_s->params->num_philo))
 	{
 		main_s->philo[i].num = i + 1;
+		if (i == main_s->params->num_philo - 1)
+		{
+			main_s->philo[i].fork_r = &main_s->forks[0];
+			main_s->philo[i].fork_l = &main_s->forks[i];
+		}
+		else
+		{			
+			main_s->philo[i].fork_r = &main_s->forks[i + 1];
+			main_s->philo[i].fork_l = &main_s->forks[i];
+		}
 		if (i % 2 == 0)
 			main_s->philo[i].state = EAT;
 		else
+		{	
 			main_s->philo[i].state = THINK;
+			usleep(10);
+		}
 		main_s->philo[i].times_eat = 0;
 		main_s->start_time = time_init();
 		thread_dt[i].index = i;
 		thread_dt[i].main_s = main_s;
-		thread_dt[i].end_threads = 0;
+		// thread_dt[i].main_s->end_mutex = 
+		thread_dt[i].main_s->end_threads = 0;
 		if (pthread_create(&main_s->philo[i].one_ph, NULL, thr_func, &thread_dt[i]) != 0)
 		{
 			// free(philo);
@@ -58,17 +73,14 @@ void	philo_init(t_main *main_s)
 
 void	thread_init(t_params *params)
 {
-	int		i;
+	unsigned long		i;
 	t_main	main_s;
 
 	main_s.philo = malloc(sizeof(t_philo) * params->num_philo);
-	printf("In thread_init!\n");
 	i = 0;
 	main_s.params = params;
-	main_s.philo->fork = fork_init(params->num_philo);
-	printf("Exit fork_init!\n");
+	main_s.forks = fork_init(params->num_philo);
 	philo_init(&main_s);
-	printf("Exit philo_init!\n");
 	while (i < params->num_philo)
 	{	
 		pthread_join(main_s.philo[i].one_ph, NULL);

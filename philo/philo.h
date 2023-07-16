@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 19:00:07 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/07/10 15:05:43 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/07/16 20:18:16 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,17 +31,18 @@
 
 typedef struct s_params
 {
-	int	num_philo;
-	int	time_die;
-	int	time_eat;
-	int	time_sleep;
-	int	must_eat;
+	unsigned long	num_philo;
+	unsigned long	time_die;
+	unsigned long	time_eat;
+	unsigned long	time_sleep;
+	unsigned long	must_eat;
 }	t_params;
 
 typedef struct s_philo
 {
 	pthread_t		one_ph;
-	pthread_mutex_t	*fork;
+	pthread_mutex_t	*fork_l;
+	pthread_mutex_t	*fork_r;
 	int				num;
 	int				times_eat;
 	int				state;
@@ -49,17 +50,19 @@ typedef struct s_philo
 
 typedef struct s_main
 {
-	t_params		*params;
+	pthread_mutex_t	*forks;
 	t_philo			*philo;
+	t_params		*params;
 	int				ready;
 	long int		start_time;
+	int				end_threads;
+	pthread_mutex_t	end_mutex;
 }					t_main;
 
 typedef struct s_thread_data
 {
-	t_main	*main_s;
-	int		index;
-	int		end_threads;
+	t_main			*main_s;
+	unsigned long				index;
 }			t_thread_dt;
 
 void	parse(int argc, char *argv[], t_params *params);
@@ -68,7 +71,7 @@ int		ft_atoi(const char *str);
 int		ft_isdigit(int a);
 void	thread_init(t_params *params);
 void	*thr_func(void *arg);
-long int	time_init(void);
-void	sleeping(int s);
+unsigned long	time_init(void);
+void	sleeping(int s, t_thread_dt *dt);
 
 #endif
