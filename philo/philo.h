@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 19:00:07 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/07/16 20:18:16 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/07/18 00:37:11 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef struct s_philo
 	int				num;
 	int				times_eat;
 	int				state;
+	unsigned long	last_meal_time;
 }					t_philo;
 
 typedef struct s_main
@@ -72,6 +73,6 @@ int		ft_isdigit(int a);
 void	thread_init(t_params *params);
 void	*thr_func(void *arg);
 unsigned long	time_init(void);
-void	sleeping(int s, t_thread_dt *dt);
+int	sleeping(unsigned int s, t_thread_dt *dt);
 
 #endif

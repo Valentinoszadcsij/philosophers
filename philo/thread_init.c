@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 17:38:58 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/07/16 20:18:25 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/07/18 00:53:32 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,27 +40,29 @@ void	philo_init(t_main *main_s)
 		main_s->philo[i].num = i + 1;
 		if (i == main_s->params->num_philo - 1)
 		{
-			main_s->philo[i].fork_r = &main_s->forks[0];
-			main_s->philo[i].fork_l = &main_s->forks[i];
+			main_s->philo[i].fork_r = &main_s->forks[i];
+			main_s->philo[i].fork_l = &main_s->forks[0];
 		}
 		else
 		{			
-			main_s->philo[i].fork_r = &main_s->forks[i + 1];
-			main_s->philo[i].fork_l = &main_s->forks[i];
+			main_s->philo[i].fork_r = &main_s->forks[i];
+			main_s->philo[i].fork_l = &main_s->forks[i + 1];
 		}
 		if (i % 2 == 0)
+		{	
 			main_s->philo[i].state = EAT;
+		}
 		else
 		{	
 			main_s->philo[i].state = THINK;
-			usleep(10);
+			//usleep(10);
 		}
 		main_s->philo[i].times_eat = 0;
-		main_s->start_time = time_init();
 		thread_dt[i].index = i;
 		thread_dt[i].main_s = main_s;
-		// thread_dt[i].main_s->end_mutex = 
 		thread_dt[i].main_s->end_threads = 0;
+		main_s->start_time = time_init();
+		main_s->philo[i].last_meal_time = 0;
 		if (pthread_create(&main_s->philo[i].one_ph, NULL, thr_func, &thread_dt[i]) != 0)
 		{
 			// free(philo);
