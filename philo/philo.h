@@ -16,6 +16,7 @@
 # define EXIT_ARGS 0
 # define EXIT_ARG_NONDIGIT 1
 # define EXIT_THREAD_FAIL 2
+# define ONE_PHILO 3
 
 //states
 # define EAT 0 
@@ -43,7 +44,6 @@ typedef struct s_philo
 	pthread_t		one_ph;
 	pthread_mutex_t	*fork_l;
 	pthread_mutex_t	*fork_r;
-	int				num;
 	int				times_eat;
 	int				state;
 	unsigned long	last_meal_time;
@@ -58,6 +58,7 @@ typedef struct s_main
 	long int		start_time;
 	int				end_threads;
 	pthread_mutex_t	end_mutex;
+	pthread_mutex_t	print_lock;
 }					t_main;
 
 typedef struct s_thread_data
@@ -73,6 +74,6 @@ int		ft_isdigit(int a);
 void	thread_init(t_params *params);
 void	*thr_func(void *arg);
 unsigned long	time_init(void);
-int	sleeping(unsigned int s, t_thread_dt *dt);
+int	sleeping(unsigned long s, t_thread_dt *dt);
 
 #endif

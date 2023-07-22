@@ -29,4 +29,9 @@ void	errors(int errnum)
 		write(2, "Error: couldn't create thread\n", 30);
 		exit (EXIT_FAILURE);
 	}
+	if (errnum == ONE_PHILO)
+	{
+		printf("0 1 has died\n");
+		exit (0);
+	}
 }

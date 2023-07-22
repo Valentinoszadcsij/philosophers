@@ -15,6 +15,8 @@
 void	params_init(int argc, char *argv[], t_params *params)
 {
 	params->num_philo = ft_atoi(argv[1]);
+	if (params->num_philo == 1)
+		errors(ONE_PHILO);
 	params->time_die = ft_atoi(argv[2]);
 	params->time_eat = ft_atoi(argv[3]);
 	params->time_sleep = ft_atoi(argv[4]);

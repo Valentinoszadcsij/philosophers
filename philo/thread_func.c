@@ -13,7 +13,6 @@
 #include "philo.h"
 int	f_eat(t_thread_dt *dt)
 {
-	dt->main_s->philo[dt->index].last_meal_time = 0;
 	//printf("LAST MEAL TIME FOR PHILO %lu ==  %lu\n", dt->index + 1, dt->main_s->philo[dt->index].last_meal_time);
 	pthread_mutex_lock(dt->main_s->philo[dt->index].fork_l);
 	printf("%ld %lu has taken a fork\n", time_init() - dt->main_s->start_time, dt->index + 1);
@@ -30,17 +29,29 @@ int	f_eat(t_thread_dt *dt)
 
 int	f_sleep(t_thread_dt *dt)
 {
-	dt->main_s->philo[dt->index].last_meal_time = dt->main_s->params->time_sleep;	
+	pthread_mutex_lock(&dt->main_s->print_lock);
 	printf("%ld %lu is sleeping\n", time_init() - (dt->main_s->start_time), dt->index + 1);
+	pthread_mutex_unlock(&dt->main_s->print_lock);
 	if (sleeping(dt->main_s->params->time_sleep, dt) == 1)
 		return (1);
+	//dt->main_s->philo[dt->index].last_meal_time = dt->main_s->params->time_sleep + dt->main_s->params->time_eat;
 	dt->main_s->philo[dt->index].state = THINK;
 	return (0);
 }
 int	f_think(t_thread_dt *dt)
 {
-	printf("%ld %lu is thinking\n", time_init() - dt->main_s->start_time, dt->index + 1);
-	if (sleeping(dt->main_s->params->time_eat, dt) == 1)
+	unsigned long time_to_think;
+
+	if (time_init() - dt->main_s->start_time < 10)
+		time_to_think = dt->main_s->params->time_eat;
+	else if (dt->main_s->params->num_philo % 2 == 0)
+		time_to_think = dt->main_s->params->time_eat - dt->main_s->params->time_sleep;
+	else
+		time_to_think = dt->main_s->params->time_eat;
+	pthread_mutex_lock(&dt->main_s->print_lock);
+	printf("%lu %lu is thinking\n", time_init() - dt->main_s->start_time, dt->index + 1);
+	pthread_mutex_unlock(&dt->main_s->print_lock);
+	if (sleeping(time_to_think, dt) == 1)
 		return (1);
 	// if (dt->main_s->end_threads == 1)
 	// 	return (pthread_mutex_unlock(&dt->main_s->end_mutex), dt->index + 1);
@@ -56,6 +67,37 @@ void	*thr_func(void *arg)
 	dt = arg;
 	while (1)
 	{
+		if (dt->main_s->philo[dt->index].state == EAT)
+		{
+			dt->main_s->philo[dt->index].last_meal_time = 0;
+			if (f_eat(dt) == 1)
+				break;
+		}
+		else if (dt->main_s->philo[dt->index].state == SLEEP)
+		{
+			dt->main_s->philo[dt->index].last_meal_time = dt->main_s->params->time_eat + dt->main_s->params->time_sleep;
+			if (f_sleep(dt) == 1)
+				break;
+		}
+		else if (dt->main_s->philo[dt->index].state == THINK)
+		{
+			// pthread_mutex_lock(&dt->main_s->end_mutex);
+			// if (dt->main_s->end_threads == 1)
+			// 	break;
+			// pthread_mutex_unlock(&dt->main_s->end_mutex);
+			check = f_think(dt);
+			if (check == 1)
+			{
+	
+				pthread_mutex_lock(&dt->main_s->print_lock);
+				printf("%lu %lu has died\n", time_init() - dt->main_s->start_time, dt->index + 1);
+				pthread_mutex_unlock(&dt->main_s->print_lock);
+	
+				break;
+			}
+			else
+				dt->main_s->philo[dt->index].state = EAT;
+		}
 		pthread_mutex_lock(&dt->main_s->end_mutex);
 		if (dt->main_s->end_threads == 1)
 		{
@@ -65,31 +107,6 @@ void	*thr_func(void *arg)
 			break;
 		}
 		pthread_mutex_unlock(&dt->main_s->end_mutex);
-		if (dt->main_s->philo[dt->index].state == EAT)
-		{
-			if (f_eat(dt) == 1)
-				break;
-		}
-		else if (dt->main_s->philo[dt->index].state == SLEEP)
-		{
-			if (f_sleep(dt) == 1)
-				break;
-		}
-		else if (dt->main_s->philo[dt->index].state == THINK)
-		{
-			check = f_think(dt);
-			if (check != 0)
-			{
-				if (check == 1)
-					printf("Philosofer %lu has starved to death!\n", dt->index + 1);
-				break;
-			}
-			else
-			{	
-				//printf("PHILO %lu OUT OF THINKING STATE at %lu\n", dt->index + 1, time_init() - dt->main_s->start_time);
-				dt->main_s->philo[dt->index].state = EAT;
-			}
-		}
 	}
 	return (NULL);
 }

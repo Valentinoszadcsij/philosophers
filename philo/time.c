@@ -23,40 +23,39 @@ unsigned long	time_init(void)
 	return (current);
 }
 
-int	sleeping(unsigned int s, t_thread_dt *dt)
+int	sleeping(unsigned long s, t_thread_dt *dt)
 {
 	unsigned long	start_msec;
 	start_msec = time_init();
 	unsigned long counter;
 
-	counter = 0;
-	while((time_init() - start_msec) < s)
+	counter = time_init();
+	while((counter) - start_msec < s)
 	{
+
+		pthread_mutex_lock(&dt->main_s->end_mutex);
 		if (dt->main_s->end_threads == 1)
 		{
-			//printf("INSIDE SLEEPING CHECK PHILO %lu\n", dt->index + 1);
 			pthread_mutex_unlock(&dt->main_s->end_mutex);
 			pthread_mutex_unlock(dt->main_s->philo[dt->index].fork_l);
 			pthread_mutex_unlock(dt->main_s->philo[dt->index].fork_r);
 			return (1);
 		}
-		if (dt->main_s->philo[dt->index].last_meal_time >= dt->main_s->params->time_die && dt->main_s->philo[dt->index].state == THINK)
+		pthread_mutex_unlock(&dt->main_s->end_mutex);
+		
+		if (time_init() - counter == 5)
+		{
+			counter += 5;
+			if (dt->main_s->philo[dt->index].state == THINK)
+				dt->main_s->philo[dt->index].last_meal_time = dt->main_s->philo[dt->index].last_meal_time  + 5;
+		}
+		if (dt->main_s->philo[dt->index].last_meal_time == dt->main_s->params->time_die)
 		{	
-			//printf("INSIDE SLEEPING SET PHILO %lu\n Time passed: %lu\n", dt->index + 1, dt->main_s->philo[dt->index].last_meal_time);
 			pthread_mutex_lock(&dt->main_s->end_mutex);
 			dt->main_s->end_threads = 1;
 			pthread_mutex_unlock(&dt->main_s->end_mutex);
-			return (1);
 		}
-		pthread_mutex_lock(&dt->main_s->end_mutex);
-		pthread_mutex_unlock(&dt->main_s->end_mutex);
-		counter += 10;
-		if (counter == 1000)
-		{
-			counter = 1;
-			dt->main_s->philo[dt->index].last_meal_time++;
-		}
-		usleep(10);
+		usleep(5);
 	}
 	return (0);
 }

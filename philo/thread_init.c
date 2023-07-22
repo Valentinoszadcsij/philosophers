@@ -34,10 +34,10 @@ void	philo_init(t_main *main_s)
 
 	thread_dt = malloc(sizeof(t_thread_dt) * main_s->params->num_philo);
 	pthread_mutex_init(&main_s->end_mutex, NULL);
+	pthread_mutex_init(&main_s->print_lock, NULL);
 	i = 0;
 	while (i < (main_s->params->num_philo))
 	{
-		main_s->philo[i].num = i + 1;
 		if (i == main_s->params->num_philo - 1)
 		{
 			main_s->philo[i].fork_r = &main_s->forks[i];
@@ -50,7 +50,10 @@ void	philo_init(t_main *main_s)
 		}
 		if (i % 2 == 0)
 		{	
-			main_s->philo[i].state = EAT;
+			if (i == (main_s->params->num_philo - 1))
+				main_s->philo[i].state = THINK;
+			else
+				main_s->philo[i].state = EAT;
 		}
 		else
 		{	
