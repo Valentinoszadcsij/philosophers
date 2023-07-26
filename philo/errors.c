@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:06:16 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/06/25 22:29:50 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/07/24 09:19:05 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,5 @@ void	errors(int errnum)
 	{
 		write(2, "Error: couldn't create thread\n", 30);
 		exit (EXIT_FAILURE);
-	}
-	if (errnum == ONE_PHILO)
-	{
-		printf("0 1 has died\n");
-		exit (0);
 	}
 }

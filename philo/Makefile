@@ -1,13 +1,13 @@
 
 NAME:=	philo
-SRC:= 	philo.c parser.c errors.c utils.c thread_init.c thread_func.c time.c
+SRC:= 	philo.c parser.c errors.c utils.c thread_init.c thread_func.c philo_utils.c mem_free.c
 
 OBJ:=	$(SRC:.c=.o)
 
 
 
 FLAGS:=	-Wall -Werror -Wextra
-FLAGS+= -g3 -fsanitize=address
+FLAGS+= -g3 -fsanitize=leak
 
 CC:= cc
 

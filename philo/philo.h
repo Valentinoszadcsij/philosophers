@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 19:00:07 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/07/18 00:37:11 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/07/26 15:07:17 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,6 @@
 # define EXIT_ARG_NONDIGIT 1
 # define EXIT_THREAD_FAIL 2
 # define ONE_PHILO 3
-
-//states
-# define EAT 0 
-# define THINK 1 
-# define SLEEP 2
-# define DEAD 3
 
 # include <stdio.h>
 # include <unistd.h>
@@ -44,8 +38,7 @@ typedef struct s_philo
 	pthread_t		one_ph;
 	pthread_mutex_t	*fork_l;
 	pthread_mutex_t	*fork_r;
-	int				times_eat;
-	int				state;
+	unsigned long	times_eat;
 	unsigned long	last_meal_time;
 }					t_philo;
 
@@ -54,8 +47,7 @@ typedef struct s_main
 	pthread_mutex_t	*forks;
 	t_philo			*philo;
 	t_params		*params;
-	int				ready;
-	long int		start_time;
+	unsigned long	start_time;
 	int				end_threads;
 	pthread_mutex_t	end_mutex;
 	pthread_mutex_t	print_lock;
@@ -64,7 +56,7 @@ typedef struct s_main
 typedef struct s_thread_data
 {
 	t_main			*main_s;
-	unsigned long				index;
+	unsigned long	index;
 }			t_thread_dt;
 
 void	parse(int argc, char *argv[], t_params *params);
@@ -74,6 +66,10 @@ int		ft_isdigit(int a);
 void	thread_init(t_params *params);
 void	*thr_func(void *arg);
 unsigned long	time_init(void);
-int	sleeping(unsigned long s, t_thread_dt *dt);
+void	sleeping(unsigned long s, t_thread_dt *dt);
+int check_death(t_thread_dt *dt);
+int check_times_ate(t_thread_dt *dt);
+void	mem_free(void *arg, int n, int type);
+
 
 #endif
