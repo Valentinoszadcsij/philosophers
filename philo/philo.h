@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 19:00:07 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/07/26 15:07:17 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/07/30 12:21:12 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,5 @@ unsigned long	time_init(void);
 void	sleeping(unsigned long s, t_thread_dt *dt);
 int check_death(t_thread_dt *dt);
 int check_times_ate(t_thread_dt *dt);
-void	mem_free(void *arg, int n, int type);
-
 
 #endif

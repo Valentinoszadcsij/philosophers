@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 17:38:58 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/07/26 15:17:48 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/07/30 12:45:06 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ int	controller(t_thread_dt *dt)
 {
 	if (check_death(dt))
 	{
-		printf("%lu %lu has died\n", time_init() - dt->main_s->start_time, dt->index + 1);
+		printf("%lu %lu has died\n", time_init() - dt->main_s
+			->start_time, dt->index + 1);
 		return (1);
 	}
 	if (dt->main_s->params->must_eat)
@@ -73,14 +74,15 @@ pthread_mutex_t	*fork_init(int n)
 void	philo_init(t_thread_dt *thread_dt)
 {
 	unsigned long	i;
-	
+
 	i = 0;
 	while (i < (thread_dt->main_s->params->num_philo))
 	{
 		thread_dt[i].index = i;
 		thread_dt[i].main_s = thread_dt->main_s;
 		main_s_init(thread_dt->main_s, i);
-		if (pthread_create(&thread_dt->main_s->philo[i].one_ph, NULL, thr_func, &thread_dt[i]) != 0)
+		if (pthread_create(&thread_dt->main_s
+				->philo[i].one_ph, NULL, thr_func, &thread_dt[i]) != 0)
 		{
 			errors(EXIT_THREAD_FAIL);
 		}
@@ -96,8 +98,8 @@ void	philo_init(t_thread_dt *thread_dt)
 
 void	thread_init(t_params *params)
 {
-	unsigned long			i;
-	t_main				main_s;
+	unsigned long	i;
+	t_main			main_s;
 	t_thread_dt		*thread_dt;
 
 	thread_dt = malloc(sizeof(t_thread_dt) * params->num_philo);
